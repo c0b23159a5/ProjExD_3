@@ -167,13 +167,13 @@ class Bomb:
 
 def main():
     pg.display.set_caption("たたかえ！こうかとん")
-    screen = pg.display.set_mode((WIDTH, HEIGHT))    
+    screen = pg.display.set_mode((WIDTH, HEIGHT))
     bg_img = pg.image.load("fig/pg_bg.jpg")
     bird = Bird((300, 200))
     bomb = Bomb((255, 0, 0), 10)
-    # bomb2 = Bomb((0, 0, 255), 20)
+
+    beam = None  # ビーム変数の初期化
     clock = pg.time.Clock()
-    beam = None  # ビーム変数の初期化   
     tmr = 0
     while True:
         for event in pg.event.get():
@@ -181,25 +181,36 @@ def main():
                 return
             if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
                 # スペースキー押下でBeamクラスのインスタンス生成
-                beam = Beam(bird)            
+                beam = Beam(bird)
         screen.blit(bg_img, [0, 0])
-        
-        if bird.rct.colliderect(bomb.rct):
+
+        # 爆弾が存在する場合の処理
+        if bomb is not None and bird.rct.colliderect(bomb.rct):
             # ゲームオーバー時に，こうかとん画像を切り替え，1秒間表示させる
             bird.change_img(8, screen)
             pg.display.update()
             time.sleep(1)
             return
 
+        # ビームと爆弾の衝突判定
+        if beam is not None and bomb is not None and beam.rct.colliderect(bomb.rct):
+            beam = None  # ビームを消滅
+            bomb = None  # 爆弾を消滅
+
         key_lst = pg.key.get_pressed()
         bird.update(key_lst, screen)
-        beam.update(screen)   
-        bomb.update(screen)
-        # boom2.update(screen)
+
+        # ビームの更新（存在する場合のみ）
+        if beam is not None:
+            beam.update(screen)
+
+        # 爆弾の更新（存在する場合のみ）
+        if bomb is not None:
+            bomb.update(screen)
+
         pg.display.update()
         tmr += 1
         clock.tick(50)
-
 
 if __name__ == "__main__":
     pg.init()
