@@ -154,7 +154,7 @@ class Score:
         スコアクラスの初期化
         """
         self.count = 0  # スコアの初期値
-        self.fonto = pg.font.SysFont("/syun/ssd02/python_learning/project_D_TUT/HGRPP1/HGRPP1.ttf", 30)  # フォント設定
+        self.fonto = pg.font.SysFont("Noto Sans CJK JP", 30)  # フォント設定
         self.color = (0, 0, 255)  # 青media
         self.img = self.fonto.render(f"スコア: {self.count}", 0, self.color)  # 初期スコア描画
         self.rct = self.img.get_rect()
