@@ -52,6 +52,7 @@ class Bird:
         こうかとん画像Surfaceを生成する
         引数 xy：こうかとん画像の初期位置座標タプル
         """
+        self.dire = (+5,0) # デフォルト右向き
         self.img = __class__.imgs[(+5, 0)]
         self.rct: pg.Rect = self.img.get_rect()
         self.rct.center = xy
@@ -81,6 +82,7 @@ class Bird:
             self.rct.move_ip(-sum_mv[0], -sum_mv[1])
         if not (sum_mv[0] == 0 and sum_mv[1] == 0):
             self.img = __class__.imgs[tuple(sum_mv)]
+            self.dire = sum_mv
         screen.blit(self.img, self.rct)
 
 
@@ -121,6 +123,8 @@ class Beam:
         self.rct.centery = bird.rct.centery  # こうかとんの中心縦座標に合わせる
         self.rct.left = bird.rct.right  # こうかとんの右端に配置
         self.vx, self.vy = +5, 0  # 横方向に進む速度を設定
+        self.vx, self.vy = bird.dire
+        
 
     def update(self, screen: pg.Surface):
         """
