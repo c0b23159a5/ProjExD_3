@@ -206,7 +206,7 @@ def main():
                 # こうかとんが喜ぶエフェクト
                 bird.change_img(6, screen)  # 喜ぶ画像
                 pg.display.update()
-                time.sleep(0.5)  # 0.5秒間表示
+                # time.sleep(0.5)  # 0.5秒間表示
                 bird.change_img(3, screen)  # 元の画像
 
         # None以外の要素のみを持つリストに更新
