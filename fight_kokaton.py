@@ -248,6 +248,8 @@ def main():
                     explosions.append(Explosion(bomb.rct.center))  # 爆発を追加
                     bombs[i] = None  # 爆弾を消滅
                     beams[j] = None  # ビームを消滅
+                    score.increment()  # スコアを1増やす
+
 
         # None以外の要素のみを持つリストに更新
         bombs = [bomb for bomb in bombs if bomb is not None]
