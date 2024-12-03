@@ -164,14 +164,15 @@ class Bomb:
         self.rct.move_ip(self.vx, self.vy)
         screen.blit(self.img, self.rct)
 
+NUM_OF_BOMBS = 5  # 爆弾の数
 
 def main():
     pg.display.set_caption("たたかえ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
     bg_img = pg.image.load("fig/pg_bg.jpg")
     bird = Bird((300, 200))
-    bomb = Bomb((255, 0, 0), 10)
-
+    # NUM_OF_BOMBS 個の爆弾をリスト内包表記で生成
+    bombs = [Bomb((255, 0, 0), 10) for _ in range(NUM_OF_BOMBS)]
     beam = None  # ビーム変数の初期化
     clock = pg.time.Clock()
     tmr = 0
@@ -183,29 +184,33 @@ def main():
             if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
                 # スペースキー押下でBeamクラスのインスタンス生成
                 beam = Beam(bird)
+
         screen.blit(bg_img, [0, 0])
 
-        # 爆弾が存在する場合の処理
-        if bomb is not None and bird.rct.colliderect(bomb.rct):
-            # ゲームオーバー時に，こうかとん画像を切り替え，1秒間表示させる
-            bird.change_img(8, screen)
-            font = pg.font.Font(None, 80)  # フォントとサイズ
-            text = font.render("Game Over", True, (255, 0, 0))  # テキスト描画
-            screen.blit(text,[WIDTH // 2-150, HEIGHT // 2])
-            pg.display.update()
-            time.sleep(1)
-            return
+        # 爆弾リストの要素に対して衝突判定
+        for i, bomb in enumerate(bombs):
+            if bird.rct.colliderect(bomb.rct):
+                # こうかとんと爆弾が衝突した場合
+                bird.change_img(8, screen)
+                font = pg.font.Font(None, 80)  # フォントとサイズ
+                text = font.render("Game Over", True, (255, 0, 0))  # テキスト描画
+                screen.blit(text, [WIDTH // 2 - 150, HEIGHT // 2])
+                pg.display.update()
+                time.sleep(1)
+                return
+            if beam is not None and bomb is not None and beam.rct.colliderect(bomb.rct):
+                # ビームと爆弾が衝突した場合
+                bombs[i] = None  # 爆弾を消滅
+                beam = None  # ビームも消滅
 
-        # ビームと爆弾の衝突判定
-        if beam is not None and bomb is not None and beam.rct.colliderect(bomb.rct):
-            beam = None  # ビームを消滅
-            bomb = None  # 爆弾を消滅
+                # こうかとんが喜ぶエフェクト
+                bird.change_img(6, screen)  # 喜ぶ画像
+                pg.display.update()
+                time.sleep(0.5)  # 0.5秒間表示
+                bird.change_img(3, screen)  # 元の画像
 
-            # こうかとんが喜ぶエフェクト
-            bird.change_img(6, screen)  # 喜ぶ画像
-            pg.display.update()
-            time.sleep(0.5)  # 0.5秒間表示
-            bird.change_img(3, screen)  # 元の画像
+        # None以外の要素のみを持つリストに更新
+        bombs = [bomb for bomb in bombs if bomb is not None]
 
         key_lst = pg.key.get_pressed()
         bird.update(key_lst, screen)
@@ -215,8 +220,9 @@ def main():
             beam.update(screen)
 
         # 爆弾の更新（存在する場合のみ）
-        if bomb is not None:
+        for bomb in bombs:
             bomb.update(screen)
+
         pg.display.update()
         tmr += 1
         clock.tick(50)
