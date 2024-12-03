@@ -173,7 +173,7 @@ def main():
     bomb = Bomb((255, 0, 0), 10)
     # bomb2 = Bomb((0, 0, 255), 20)
     clock = pg.time.Clock()
-    # beam = None  # ビーム変数の初期化   
+    beam = None  # ビーム変数の初期化   
     tmr = 0
     while True:
         for event in pg.event.get():
