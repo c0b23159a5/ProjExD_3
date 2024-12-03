@@ -265,7 +265,7 @@ def main():
 
         for exp in explosions:
             exp.update(screen)
-
+        score.update(screen)  # スコアを更新
         key_lst = pg.key.get_pressed()
         bird.update(key_lst, screen)
 
