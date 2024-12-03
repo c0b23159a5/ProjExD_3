@@ -102,7 +102,6 @@ class Beam:
         self.vx, self.vy = +5, 0  # 横方向に進む速度を設定
         self.vx, self.vy = bird.dire
         
-
     def update(self, screen: pg.Surface):
         """
         ビームを速度ベクトルself.vx, self.vyに基づき移動させる
