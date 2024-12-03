@@ -133,7 +133,6 @@ class Beam:
 
 
 
-
 class Bomb:
     """
     爆弾に関するクラス
@@ -165,17 +164,46 @@ class Bomb:
         screen.blit(self.img, self.rct)
 
 NUM_OF_BOMBS = 5  # 爆弾の数
+class Score:
+    """
+    ゲームのスコアを管理するクラス
+    """
+    def __init__(self):
+        """
+        スコアクラスの初期化
+        """
+        self.count = 0  # スコアの初期値
+        self.fonto = pg.font.SysFont("/syun/ssd02/python_learning/project_D_TUT/HGRPP1/HGRPP1.ttf", 30)  # フォント設定
+        self.color = (0, 0, 255)  # 青media
+        self.img = self.fonto.render(f"スコア: {self.count}", 0, self.color)  # 初期スコア描画
+        self.rct = self.img.get_rect()
+        self.rct.center = (100, HEIGHT - 50)  # 左下の座標
+
+    def increment(self):
+        """
+        スコアを1増やす
+        """
+        self.count += 1
+
+    def update(self, screen: pg.Surface):
+        """
+        スコアを画面に表示する
+        引数 screen：画面Surface
+        """
+        self.fonto = pg.font.SysFont("Noto Sans CJK JP", 30)  # フォント設定
+        self.img = self.fonto.render(f"スコア: {self.count}", 0, self.color)  # スコア更新
+        screen.blit(self.img, self.rct)  # スコアを描画
+
 
 def main():
     pg.display.set_caption("たたかえ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
     bg_img = pg.image.load("fig/pg_bg.jpg")
     bird = Bird((300, 200))
-    # NUM_OF_BOMBS 個の爆弾をリスト内包表記で生成
     bombs = [Bomb((255, 0, 0), 10) for _ in range(NUM_OF_BOMBS)]
     beam = None  # ビーム変数の初期化
+    score = Score()  # スコアクラスのインスタンス
     clock = pg.time.Clock()
-    tmr = 0
 
     while True:
         for event in pg.event.get():
@@ -201,17 +229,18 @@ def main():
             if beam is not None and bomb is not None and beam.rct.colliderect(bomb.rct):
                 # ビームと爆弾が衝突した場合
                 bombs[i] = None  # 爆弾を消滅
+                score.increment()  # スコアを1増やす
                 beam = None  # ビームも消滅
 
                 # こうかとんが喜ぶエフェクト
                 bird.change_img(6, screen)  # 喜ぶ画像
                 pg.display.update()
-                # time.sleep(0.5)  # 0.5秒間表示
                 bird.change_img(3, screen)  # 元の画像
 
         # None以外の要素のみを持つリストに更新
         bombs = [bomb for bomb in bombs if bomb is not None]
 
+        score.update(screen)  # スコアを更新
         key_lst = pg.key.get_pressed()
         bird.update(key_lst, screen)
 
@@ -224,7 +253,6 @@ def main():
             bomb.update(screen)
 
         pg.display.update()
-        tmr += 1
         clock.tick(50)
 
 
