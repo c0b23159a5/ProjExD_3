@@ -193,7 +193,7 @@ def main():
 
         key_lst = pg.key.get_pressed()
         bird.update(key_lst, screen)
-        # beam.update(screen)   
+        beam.update(screen)   
         bomb.update(screen)
         # boom2.update(screen)
         pg.display.update()
