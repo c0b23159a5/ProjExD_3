@@ -218,6 +218,7 @@ def main():
     beams = []  # ビームのリスト
     explosions = []  # 爆発のリスト
     clock = pg.time.Clock()
+    score = Score()  # スコアクラスのインスタンス
 
     while True:
         for event in pg.event.get():
