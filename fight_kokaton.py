@@ -195,37 +195,10 @@ class Score:
         screen.blit(self.img, self.rct)  # スコアを描画
 
 
-class Explosion:
-    """
-    爆発を演出するクラス
-    """
-    def __init__(self, center: tuple[int, int]):
-        """
-        爆発の初期化
-        引数 center: 爆発の中心座標
-        """
-        original_img = pg.image.load("fig/explosion.gif")
-        self.images = [
-            original_img,
-            pg.transform.flip(original_img, True, False),  # 左右反転
-            pg.transform.flip(original_img, False, True)  # 上下反転
-        ]
-        self.index = 0  # 現在の表示する画像のインデックス
-        self.img = self.images[self.index]
-        self.rct = self.img.get_rect()
-        self.rct.center = center  # 爆発位置
-        self.life = 20  # 爆発の表示時間
+class explosion:
+    def __init__(self):
+        pass
 
-    def update(self, screen: pg.Surface):
-        """
-        爆発を更新して描画する
-        引数 screen: 描画するSurface
-        """
-        self.life -= 1  # 表示時間を減算
-        if self.life > 0:
-            self.index = (self.index + 1) % len(self.images)  # 画像を切り替え
-            self.img = self.images[self.index]
-            screen.blit(self.img, self.rct)  # 描画
 
 
 def main():
@@ -235,7 +208,6 @@ def main():
     bird = Bird((300, 200))
     bombs = [Bomb((255, 0, 0), 10) for _ in range(NUM_OF_BOMBS)]
     beams = []  # ビームのリスト
-    explosions = []  # 爆発のリスト
     clock = pg.time.Clock()
 
     while True:
@@ -263,14 +235,12 @@ def main():
             for j, beam in enumerate(beams):
                 if beam is not None and bomb is not None and beam.rct.colliderect(bomb.rct):
                     # ビームと爆弾が衝突した場合
-                    explosions.append(Explosion(bomb.rct.center))  # 爆発を追加
                     bombs[i] = None  # 爆弾を消滅
                     beams[j] = None  # ビームを消滅
 
         # None以外の要素のみを持つリストに更新
         bombs = [bomb for bomb in bombs if bomb is not None]
         beams = [beam for beam in beams if beam is not None and check_bound(beam.rct)[0]]
-        explosions = [exp for exp in explosions if exp.life > 0]  # 爆発時間が残っているものだけ
 
         # リストの各要素の更新処理
         for beam in beams:
@@ -278,9 +248,6 @@ def main():
 
         for bomb in bombs:
             bomb.update(screen)
-
-        for exp in explosions:
-            exp.update(screen)
 
         key_lst = pg.key.get_pressed()
         bird.update(key_lst, screen)
