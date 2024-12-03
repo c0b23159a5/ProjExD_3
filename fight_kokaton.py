@@ -175,6 +175,7 @@ def main():
     beam = None  # ビーム変数の初期化
     clock = pg.time.Clock()
     tmr = 0
+
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -197,6 +198,12 @@ def main():
             beam = None  # ビームを消滅
             bomb = None  # 爆弾を消滅
 
+            # こうかとんが喜ぶエフェクト
+            bird.change_img(6, screen)  # 喜ぶ画像
+            pg.display.update()
+            time.sleep(0.5)  # 0.5秒間表示
+            bird.change_img(3, screen)  # 元の画像
+
         key_lst = pg.key.get_pressed()
         bird.update(key_lst, screen)
 
@@ -210,6 +217,7 @@ def main():
         pg.display.update()
         tmr += 1
         clock.tick(50)
+
 
 if __name__ == "__main__":
     pg.init()
