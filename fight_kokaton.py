@@ -207,7 +207,6 @@ def main():
         # 爆弾の更新（存在する場合のみ）
         if bomb is not None:
             bomb.update(screen)
-
         pg.display.update()
         tmr += 1
         clock.tick(50)
