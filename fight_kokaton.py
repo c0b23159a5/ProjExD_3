@@ -165,21 +165,6 @@ class Bomb:
         screen.blit(self.img, self.rct)
 
 
-# def game_over(screen):
-#     """
-#     ゲームオーバー画面を表示する関数
-#     引数 screen: ゲームの画面Surface
-#     """
-
-    # text_rect = text.get_rect(center=(WIDTH // 2, HEIGHT // 2))  # 中央配置
-
-    # 背景色を黒にしてメッセージを表示
-    # screen.fill((0, 0, 0))
-    # screen.blit(text, text_rect)
-    # pg.display.update()
-    # time.sleep(2)  # 2秒間表示して終了
-
-
 def main():
     pg.display.set_caption("たたかえ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -203,7 +188,7 @@ def main():
         # 爆弾が存在する場合の処理
         if bomb is not None and bird.rct.colliderect(bomb.rct):
             # ゲームオーバー時に，こうかとん画像を切り替え，1秒間表示させる
-            # bird.change_img(8, screen)
+            bird.change_img(8, screen)
             font = pg.font.Font(None, 80)  # フォントとサイズ
             text = font.render("Game Over", True, (255, 0, 0))  # テキスト描画
             screen.blit(text,[WIDTH // 2-150, HEIGHT // 2])
